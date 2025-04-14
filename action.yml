@@ -50,6 +50,7 @@ runs:
         while [ $n -lt $MAX_RETRIES ]; do
           echo "Starting Twingate service..."
           set +xe
+          twingate config log-level debug
           twingate start
 
           echo "Waiting $WAIT_TIME seconds for Twingate service to start..."
@@ -110,6 +111,8 @@ runs:
           echo "Retrying in 5 seconds..."
           sleep 5
         done
+
+        journalctl -u twingate --no-pager
 
     - name: Install and Start Twingate (Windows)
       if: runner.os == 'Windows'
