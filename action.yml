@@ -38,6 +38,7 @@ runs:
         while [ $n -lt $MAX_RETRIES ]; do
           echo "Starting Twingate service..."
           set +xe
+          twingate config log-level debug
           twingate start
 
           echo "Waiting $WAIT_TIME seconds for Twingate service to start..."
@@ -49,6 +50,9 @@ runs:
           if [ "$status" = "online" ]; then
             echo "Twingate service is connected."
             twingate resources
+
+            journalctl -u twingate --no-pager
+            
             break
           else
             twingate stop
