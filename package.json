@@ -4,7 +4,7 @@
   "description": "Connect to Twingate network in GitHub Actions",
   "main": "src/index.js",
   "scripts": {
-    "build": "ncc build src/index.js -o dist && ncc build src/cleanup.js -o dist --filename cleanup.js",
+    "build": "ncc build src/index.js -o dist && ncc build src/cleanup.js -o dist2 && mv dist2/index.js dist/cleanup.js && rm -r dist2",
     "package": "npm run build"
   },
   "repository": {
