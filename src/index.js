@@ -1,5 +1,3 @@
-// @ts-check
-
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const fs = require('fs').promises;
@@ -37,14 +35,14 @@ async function setupLinux(serviceKey) {
   try {
     core.info('Installing Twingate client for Linux...');
     
-    // Install Twingate using the modern method
+    // Install Twingate using the official method from Twingate documentation
     await exec.exec('sudo', ['apt-get', 'update', '-qq']);
     await exec.exec('sudo', ['apt-get', 'install', '-y', 'curl', 'gnupg', 'ca-certificates']);
     
-    // Use the modern GPG keyring method instead of deprecated apt-key
-    await exec.exec('bash', ['-c', 'curl -fsSL https://packages.twingate.com/public.key | sudo gpg --dearmor -o /usr/share/keyrings/twingate-keyring.gpg']);
-    await exec.exec('bash', ['-c', 'echo "deb [signed-by=/usr/share/keyrings/twingate-keyring.gpg] https://packages.twingate.com/apt/ /" | sudo tee /etc/apt/sources.list.d/twingate.list']);
-    await exec.exec('sudo', ['apt-get', 'update']);
+    // Use the official Twingate GPG key and repository
+    await exec.exec('bash', ['-c', 'curl -fsSL https://packages.twingate.com/apt/gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/twingate-client-keyring.gpg']);
+    await exec.exec('bash', ['-c', 'echo "deb [signed-by=/usr/share/keyrings/twingate-client-keyring.gpg] https://packages.twingate.com/apt/ * *" | sudo tee /etc/apt/sources.list.d/twingate.list']);
+    await exec.exec('sudo', ['apt-get', 'update', '-yq']);
     await exec.exec('sudo', ['apt-get', 'install', '-yq', 'twingate']);
     
     core.exportVariable('TWINGATE_INSTALLED', 'true');
