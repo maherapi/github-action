@@ -37,13 +37,15 @@ async function setupLinux(serviceKey) {
   try {
     core.info('Installing Twingate client for Linux...');
     
-    // Install Twingate
+    // Install Twingate using the modern method
     await exec.exec('sudo', ['apt-get', 'update', '-qq']);
-    await exec.exec('sudo', ['apt-get', 'install', '-y', 'curl', 'gnupg']);
-    await exec.exec('bash', ['-c', 'curl -s https://packages.twingate.com/public.key | sudo apt-key add -']);
-    await exec.exec('bash', ['-c', 'echo "deb [trusted=yes] https://packages.twingate.com/apt/ /" | sudo tee /etc/apt/sources.list.d/twingate.list']);
-    await exec.exec('sudo', ['apt-get', 'update', '-o', 'Dir::Etc::sourcelist=sources.list.d/twingate.list', '-o', 'Dir::Etc::sourceparts=-', '-o', 'APT::Get::List-Cleanup=0']);
-    await exec.exec('sudo', ['apt', 'install', '-yq', 'twingate']);
+    await exec.exec('sudo', ['apt-get', 'install', '-y', 'curl', 'gnupg', 'ca-certificates']);
+    
+    // Use the modern GPG keyring method instead of deprecated apt-key
+    await exec.exec('bash', ['-c', 'curl -fsSL https://packages.twingate.com/public.key | sudo gpg --dearmor -o /usr/share/keyrings/twingate-keyring.gpg']);
+    await exec.exec('bash', ['-c', 'echo "deb [signed-by=/usr/share/keyrings/twingate-keyring.gpg] https://packages.twingate.com/apt/ /" | sudo tee /etc/apt/sources.list.d/twingate.list']);
+    await exec.exec('sudo', ['apt-get', 'update']);
+    await exec.exec('sudo', ['apt-get', 'install', '-yq', 'twingate']);
     
     core.exportVariable('TWINGATE_INSTALLED', 'true');
     
