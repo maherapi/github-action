@@ -64,7 +64,7 @@ async function setupLinux(serviceKey) {
       core.info(`Starting Twingate service (attempt ${attempt + 1}/${maxRetries})...`);
       
       try {
-        await exec.exec('sudo', ['twingate', 'config', 'log-level', 'debug']);
+        await exec.exec('sudo', ['twingate', 'config', 'log-level', 'info']);
         await exec.exec('twingate', ['start']);
         
         core.info(`Waiting ${waitTime} seconds for Twingate service to start...`);
