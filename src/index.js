@@ -64,7 +64,7 @@ async function setupLinux(serviceKey) {
       core.info(`Starting Twingate service (attempt ${attempt + 1}/${maxRetries})...`);
       
       try {
-        await exec.exec('twingate', ['config', 'log-level', 'debug']);
+        await exec.exec('sudo', ['twingate', 'config', 'log-level', 'debug']);
         await exec.exec('twingate', ['start']);
         
         core.info(`Waiting ${waitTime} seconds for Twingate service to start...`);
@@ -85,12 +85,12 @@ async function setupLinux(serviceKey) {
         if (status === 'online') {
           core.info('Twingate service is connected.');
           await exec.exec('twingate', ['resources']);
-          await exec.exec('journalctl', ['-u', 'twingate', '--no-pager']);
+          await exec.exec('sudo', ['journalctl', '-u', 'twingate', '--no-pager']);
           core.exportVariable('TWINGATE_CONNECTED', 'true');
           break;
         } else {
           await exec.exec('twingate', ['stop']);
-          await exec.exec('journalctl', ['-u', 'twingate', '--no-pager']);
+          await exec.exec('sudo', ['journalctl', '-u', 'twingate', '--no-pager']);
         }
         
       } catch (error) {
