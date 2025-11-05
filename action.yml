@@ -9,7 +9,7 @@ inputs:
     description: 'Automatically cleanup Twingate connection after workflow completes'
     required: false
     default: 'true'
-  logLevel:
+  log-level:
     description: 'Log level (error, warn, info, debug)'
     required: false
     default: 'info'
