@@ -9,6 +9,10 @@ inputs:
     description: 'Automatically cleanup Twingate connection after workflow completes'
     required: false
     default: 'true'
+  log-level:
+    description: 'Log level (error, warn, info, debug)'
+    required: false
+    default: 'info'
 runs:
   using: 'node20'
   main: 'dist/index.js'
