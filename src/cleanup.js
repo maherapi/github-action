@@ -42,6 +42,16 @@ async function cleanupLinux() {
       const { exitCode } = await exec.getExecOutput('which', ['twingate'], { ignoreReturnCode: true });
       if (exitCode === 0) {
         core.info('Stopping Twingate client...');
+        const result = await exec.getExecOutput('twingate', ['report'], { 
+          ignoreReturnCode: true 
+        });
+    
+        // Print the output
+        console.log('Exit Code:', result.exitCode);
+        console.log('Stdout:', result.stdout);
+        console.log('Stderr:', result.stderr);
+
+        // Stopping twingate
         await exec.exec('twingate', ['stop'], { ignoreReturnCode: true });
         await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
       }
